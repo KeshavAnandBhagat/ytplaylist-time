@@ -1,160 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <!-- Meta tags -->
-        <meta charset="utf-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-        <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
-        <meta name="viewport" content="width=device-width" />
-        <meta name="description" content="Get the total length/duration of a YouTube playlist by passing its link as input. You get the time required to watch that playlist at different speeds.">
-        
-        
-        <!-- Favicon and title -->
-        <link rel="icon" href="{{url_for('static', filename='favicon.png')}}" />
-        <title>YouTube Playlist Length</title>
-        
-        <!-- Google tag (gtag.js) -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-6W24HY1SKP"></script>
-        <script>
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
+<head>
+    <!-- Meta tags -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta name="description" content="Get the total length/duration of a YouTube playlist by passing its link as input. You get the time required to watch that playlist at different speeds.">
 
-          gtag('config', 'G-6W24HY1SKP');
-        </script>
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8874895270666721" crossorigin="anonymous"></script>
+    <!-- Favicon and title -->
+    <link rel="icon" href="{{url_for('static', filename='favicon.png')}}" />
+    <title>YouTube Playlist Length</title>
 
-        <script src="https://kit.fontawesome.com/b9b97931ac.js" crossorigin="anonymous"></script>
-        <!-- Halfmoon CSS -->
-        <link href="https://cdn.jsdelivr.net/npm/halfmoon@1.1.1/css/halfmoon-variables.min.css" rel="stylesheet" />
-    </head>
-    <body
-        class="with-custom-webkit-scrollbars with-custom-css-scrollbars"
-        data-dm-shortcut-enabled="true"
-        data-set-preferred-mode-onload="true"
-    >
-    
-        <div class="page-wrapper with-navbar with-navbar-fixed-bottom">
-            <div class="sticky-alerts"></div>
+    <!-- Materialize CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet" />
 
-            <!-- Navbar start -->
-            <nav class="navbar h-100 bg-light-lm">
-                <div class="container-lg">
-                    <a href="https://ytplaylist-len.sharats.dev/">
-                        <img
-                            src="{{url_for('static', filename='logo.png')}}"
-                            height="60"
-                            alt="YouTube Playlist Length"
-                        />
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6W24HY1SKP"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-6W24HY1SKP');
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8874895270666721" crossorigin="anonymous"></script>
+
+    <!-- FontAwesome Icons -->
+    <script src="https://kit.fontawesome.com/b9b97931ac.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="blue">
+        <div class="nav-wrapper container">
+            <a href="https://ytplaylist-len.sharats.dev/" class="brand-logo">
+                <img src="{{url_for('static', filename='logo.png')}}" height="50" alt="YouTube Playlist Time" />
+            </a>
+            <ul class="right hide-on-med-and-down">
+                <li>
+                    <a href="#" onclick="toggleDarkMode()" class="waves-effect waves-light btn grey lighten-5 blue-text text-darken-4">
+                        <i class="fa fa-moon-o" aria-hidden="true"></i> Dark Mode
                     </a>
-                    <span class="navbar-text text-monospace">
-                        <span class="badge badge-danger text-dark-dm text-white-lm"> v2.0</span>
-                    </span>
+                </li>
+            </ul>
+        </div>
+    </nav>
 
-                    <!-- <a class="nav-link ml-auto" href="https://github.com/sharatsachin/ytplaylist-len">
-                        <img src="https://i.imgur.com/9pkk0rW.png" height="30" alt="Github Icon" />
-                    </a> -->
-                    <button
-                        class="btn btn-lg btn-square ml-auto text-danger"
-                        type="button"
-                        onclick="halfmoon.toggleDarkMode()"
-                    >
-                        <i class="fa fa-moon-o" aria-hidden="true"></i>
-                        <span class="sr-only">Toggle dark mode</span>
-                    </button>
-
-                    <a href="https://github.com/sharatsachin/ytplaylist-len">
-                        <button class="btn btn-lg btn-square ml-5 text-danger">
-                            <i class="fab fa-github" aria-hidden="true"></i>
-                            <span class="sr-only">Toggle dark mode</span>
-                        </button>
-                    </a>
-                </div>
-            </nav>
-            <!-- Navbar end -->
-
-            <!-- Content wrapper start -->
-            <div class="content-wrapper mt-20">
-                <div class="container px-20 h-50"></div>
-                <div class="container">
-                    <div class="content">
-                        <h2 class="content-title">Find the length of any YouTube playlist:</h2>
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row">
+            <div class="col s12 m8 offset-m2">
+                <div class="card">
+                    <div class="card-content">
+                        <span class="card-title center-align">Determine the Total Duration of Any YouTube Playlist</span>
                         <form method="POST">
-                            <div class="input-group">
-                                <input
-                                    type="text"
-                                    autofocus="autofocus"
-                                    class="form-control"
-                                    placeholder="youtube.com/playlist?list=ID"
-                                    name="search_string"
-                                />
-                                <div class="input-group-append">
-                                    <!-- <button type="submit" class="btn btn-primary">Analyze</button> -->
-
-                                    <button class="btn btn-primary ml-5 text-dark-dm shadow-none">Analyze</button>
-                                </div>
+                            <div class="input-field">
+                                <input type="text" id="search_string" name="search_string" class="validate" required>
+                                <label for="search_string">YouTube Playlist Link</label>
                             </div>
-                            <div id="emailHelp" class="form-text content mx-0 my-5">
-                                You can enter a playlist link, playlist ID or even a video link from the playlist!
-                                <br />
-                                This only works with playlists with upto 500 videos. Need more than that?
-                                <a href="https://colab.research.google.com/drive/1D0nbJVcFMHmQyNFVpoL65LOUiejA-bAc"
-                                    >Check here.</a
-                                >
+                            <div class="input-field center-align">
+                                <button type="submit" class="btn waves-effect waves-light blue">Analyze</button>
                             </div>
                         </form>
+                        <div class="center-align">
+                            <p class="grey-text">Provide a playlist link, playlist ID, or a video link from the playlist.</p>
+                        </div>
                     </div>
                 </div>
 
-                <div class="container">
-                    <div class="content">
+                <div class="card">
+                    <div class="card-content">
                         {% if display_text %}
-                        {% for x in display_text %}
-                            <p>{{x | safe}}</p>
-                        {% endfor %}
+                            {% for x in display_text %}
+                                <p>{{ x | safe }}</p>
+                            {% endfor %}
                         {% endif %}
                     </div>
                 </div>
+            </div>
+        </div>
 
-                
-                <div class="container">
-                    <div class="content">
-                        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8874895270666721"
-                            crossorigin="anonymous"></script>
-                        <!-- Below form -->
-                        <ins class="adsbygoogle"
-                            style="display:block"
-                            data-ad-client="ca-pub-8874895270666721"
-                            data-ad-slot="4571294072"
-                            data-ad-format="auto"
-                            data-full-width-responsive="true"></ins>
-                        <script>
-                            (adsbygoogle = window.adsbygoogle || []).push({});
-                        </script>
+        <!-- Ad Section -->
+        <div class="row">
+            <div class="col s12 m8 offset-m2">
+                <div class="card">
+                    <div class="card-content">
+                        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8874895270666721" crossorigin="anonymous"></script>
+                        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8874895270666721" data-ad-slot="4571294072" data-ad-format="auto" data-full-width-responsive="true"></ins>
+                        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
                     </div>
                 </div>
             </div>
-            <!-- Content wrapper end -->
-                      
-
-            <!-- Navbar fixed bottom start -->
-            <nav class="navbar navbar-fixed-bottom bg-light-lm">
-                <div class="footer-content mx-auto">
-                    Made with ❤ by <a href="https://www.sharats.dev"> Sharat Sachin</a>.
-                    Buy me a <a href="https://ko-fi.com/sharat">coffee.</a>
-                </div>
-            </nav>
-            <!-- Navbar fixed bottom end -->
         </div>
-        <!-- Page wrapper end -->
-        
+    </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/halfmoon@1.1.1/js/halfmoon.min.js"></script>
-        <script>
-            // dark mode toggler
-            function toggleDemo() {
-                halfmoon.toggleDarkMode();
-            }
-        </script>
-    </body>
+    <!-- Footer -->
+    <footer class="page-footer blue">
+        <div class="container">
+            <div class="row">
+                <div class="col s12 center-align">
+                    <span class="grey-text text-lighten-4">Support us on <a href="https://ko-fi.com/sharat" class="white-text">Ko-fi</a>.</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Materialize JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+    <!-- Custom JS -->
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            let elems = document.querySelectorAll('.card');
+            elems.forEach(elem => {
+                elem.classList.toggle('dark-mode');
+            });
+        }
+    </script>
+
+    <style>
+        body.dark-mode, .dark-mode .card {
+            background-color: #2c2c2c;
+            color: #ffffff;
+        }
+        .dark-mode .input-field input[type=text]:focus + label {
+            color: #ffffff;
+        }
+        .dark-mode .input-field input[type=text] {
+            border-bottom: 1px solid #ffffff;
+            box-shadow: 0 1px 0 0 #ffffff;
+        }
+        .dark-mode .input-field .prefix.active {
+            color: #ffffff;
+        }
+    </style>
+</body>
 </html>
